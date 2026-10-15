@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Qadam — әр істің өз орны бар</title>
+  <meta name="description" content="Тапсырмаларды жоспарлаңыз, орындаушыны таңдаңыз және нәтижені белгілеңіз. DummyJSON тапсырмалар кеңістігі." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/todo.css" />
+  <link rel="stylesheet" href="assets/design.css" />
+  <script src="assets/theme.js"></script>
+  <script src="assets/users.js" defer></script>
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#workspace">Тапсырмаларға өту</a>
+  <aside class="side-nav" aria-label="Бөлімдер">
+    <a class="wordmark" href="index.html"><span class="brand-symbol" aria-hidden="true">q</span>qadam<span class="brand-period">.</span></a>
+    <p class="nav-caption">ЖҰМЫС КЕҢІСТІГІ</p>
+    <nav>
+      <a class="nav-item selected" href="#workspace"><span aria-hidden="true">▦</span> Тапсырмалар</a>
+      <a class="nav-item" href="#history"><span aria-hidden="true">◷</span> Әрекеттер</a>
+      <a class="nav-item" href="#server"><span aria-hidden="true">↔</span> Сервер</a>
+    </nav>
+    <div class="side-note"><span class="side-note-line"></span><p>Үлкен нәтиже.<br />Кішкентай қадамдар.</p><small>ВТ24А · TODO</small></div>
+  </aside>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="mobile-wordmark wordmark" href="index.html"><span class="brand-symbol" aria-hidden="true">q</span>qadam.</a>
+      <span class="breadcrumb">Жұмыс кеңістігі <span aria-hidden="true">/</span> <strong>Тапсырмалар</strong></span>
+      <nav class="mobile-nav" aria-label="Бөлімдер"><a href="#workspace">Істер</a><a href="#history">Тарих</a></nav>
+      <button class="theme-toggle" type="button" data-theme-toggle>Тақырып</button>
+    </header>
+    <main class="workspace">
+      <div class="hero-heading">
+        <div><p class="eyebrow">БІР ҚАДАМ АЛҒА</p><h1>Бүгінгі істер.</h1><p class="intro">Ойды тапсырмаға, тапсырманы нәтижеге айналдырыңыз.</p></div>
+        <button id="open-add" class="primary-add" type="button" aria-haspopup="dialog">Жаңа тапсырма</button>
+      </div>
+      <div class="stats" aria-live="polite">
+        <div><span class="stat-symbol" aria-hidden="true">▦</span><span>Барлық тапсырма</span><strong id="total">0</strong></div>
+        <div><span class="stat-symbol" aria-hidden="true">◷</span><span>Орындалмады</span><strong id="pending">0</strong></div>
+        <div><span class="stat-symbol done-symbol" aria-hidden="true">✓</span><span>Орындалды</span><strong id="done">0</strong></div>
+      </div>
+      <section id="server" class="server-panel" aria-label="Сервермен байланыс">
+        <div class="server-row">
+          <div id="connection" class="connection" data-state="idle" role="status"><span class="connection-dot" aria-hidden="true"></span><div><strong id="connection-label">Қосылым тексерілмеді</strong><p id="connection-detail">DummyJSON серверіне қосылу</p></div></div>
+          <div class="server-actions"><button id="random" class="secondary" type="button">Кездейсоқ тапсырма</button><button id="load" class="secondary" type="button">Қосылу</button></div>
+        </div>
+        <details class="api-details"><summary>DummyJSON туралы</summary><p>Бұл оқу сервері өзгерістерді тұрақты сақтамайды. Бет жаңарғанда бастапқы деректер келеді. Жаңа тапсырманың ID-сін кейін өңдеу не өшіру 404 қатесін беруі мүмкін. <a href="https://dummyjson.com/docs/todos" target="_blank" rel="noopener">API құжаттамасы ↗</a></p></details>
+      </section>
+      <section id="workspace" class="list-card" aria-labelledby="list-heading">
+        <div class="list-heading"><div><p class="eyebrow">ЖОСПАРДАН — НӘТИЖЕГЕ</p><h2 id="list-heading">Тапсырмалар тақтасы</h2></div><span class="board-hint">Орындаушының атын басып, профилін ашыңыз ↗</span></div>
+        <div class="board-toolbar">
+          <div class="filters" role="group" aria-label="Тапсырмаларды сүзу"><button class="secondary" type="button" data-filter="all" aria-pressed="true">Барлығы</button><button class="secondary" type="button" data-filter="pending" aria-pressed="false">Орындалмады</button><button class="secondary" type="button" data-filter="done" aria-pressed="false">Орындалды</button></div>
+          <div class="sort-control"><label for="task-sort">Реті</label><select id="task-sort"><option value="original">Бастапқы рет</option><option value="asc">А → Я / A → Z</option><option value="desc">Я → А / Z → A</option></select></div>
+        </div>
+        <p id="status" role="status">Тапсырмалар жүктелуде…</p>
+        <ul id="tasks" aria-label="Тапсырмалар"></ul>
+        <p id="empty" class="empty">Тізім әзірге бос.</p>
+      </section>
+      <section id="history" class="activity-card" aria-labelledby="activity-heading">
+        <div class="section-heading"><div><p class="eyebrow">ӘР ҚАДАМ ЕСЕПТЕ</p><h2 id="activity-heading">Әрекеттер журналы</h2></div><span id="activity-count" class="history-count">0 әрекет</span></div>
+        <p class="help">Осы бет ашық тұрғандағы соңғы 100 сәтті әрекет. Бет жаңарғанда тарих тазарады.</p>
+        <ol id="activity-list" aria-label="Тапсырмалар тарихы"></ol>
+        <p id="activity-empty" class="empty">Алғашқы қадамнан бастаңыз. Өзгерістеріңіз осында көрінеді.</p>
+      </section>
+      <footer class="page-footer"><span class="footer-brand">qadam.</span><span>Әр істің өз орны бар.</span><span>DummyJSON · ВТ24А</span></footer>
+    </main>
+  </div>
+    <dialog id="add-dialog" aria-labelledby="add-heading">
+      <form id="add-form" class="add-form">
+        <h2 id="add-heading">Тапсырма қосу</h2>
+        <label for="new-task">Тапсырманың атауы</label>
+        <input id="new-task" placeholder="Мысалы: JavaScript тапсырмасын орындау" maxlength="200" required autocomplete="off" />
+        <div class="task-fields edit-fields">
+          <div>
+            <label for="task-user-id">Орындаушының User ID-сі</label>
+            <input id="task-user-id" type="number" min="1" step="1" value="5" required aria-describedby="owner-help" />
+          </div>
+          <div>
+            <label for="new-status">Статус</label>
+            <select id="new-status" name="completed">
+              <option value="false">Орындалмады</option>
+              <option value="true">Орындалды</option>
+            </select>
+          </div>
+        </div>
+        <div id="selected-owner" aria-live="polite"></div>
+        <p id="owner-help" class="help">Тапсырма таңдалған орындаушыға қосылады.</p>
+        <p id="add-error" role="alert"></p>
+        <div class="row">
+          <button id="add-save" type="submit">Қосу</button>
+          <button id="add-cancel" class="secondary" type="button">Болдырмау</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="edit-dialog" aria-labelledby="edit-heading">
+      <form id="edit-form">
+        <h2 id="edit-heading">Тапсырманы өңдеу</h2>
+        <label for="edit-title">Тапсырманың атауы</label>
+        <input id="edit-title" name="title" required maxlength="200" autocomplete="off" />
+        <div class="task-fields edit-fields">
+          <div>
+            <label for="edit-user-id">Орындаушының User ID-сі</label>
+            <input id="edit-user-id" type="number" name="userId" min="1" step="1" required />
+          </div>
+          <div>
+            <label for="edit-status">Статус</label>
+            <select id="edit-status" name="completed">
+              <option value="false">Орындалмады</option>
+              <option value="true">Орындалды</option>
+            </select>
+          </div>
+        </div>
+        <p id="edit-note" class="help" hidden>Бұл жаңа тапсырма DummyJSON серверінде сақталмаған. Өңдеу сұрауы 404 қатесін қайтаруы мүмкін.</p>
+        <p id="edit-error" role="alert"></p>
+        <div class="row">
+          <button type="submit" id="edit-save">Сақтау</button>
+          <button type="button" class="secondary" id="edit-cancel">
+            Болдырмау
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="user-dialog" aria-labelledby="user-heading">
+      <div class="profile-toolbar">
+        <span class="kicker">ПАЙДАЛАНУШЫ ПРОФИЛІ</span>
+        <button id="user-close" class="secondary" type="button" autofocus>Жабу ×</button>
+      </div>
+      <div id="user-content" aria-live="polite"></div>
+    </dialog>
+  </body>
+</html>
